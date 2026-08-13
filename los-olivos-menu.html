@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LOS OLIVOS · Menú Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#17140f;
+    --ink-soft:#211d17;
+    --card:#241f18;
+    --card-2:#2c261c;
+    --paper:#faf3e6;
+    --paper-dim:#c9beac;
+    --flame:#ff5a1f;
+    --flame-2:#ff8a3d;
+    --mustard:#ffc53d;
+    --olive:#7c8c46;
+    --olive-dark:#5b6635;
+    --line:rgba(250,243,230,0.1);
+    --shadow: 0 14px 30px rgba(0,0,0,0.35);
+    --radius-lg: 26px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: #0c0a07;
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  ::selection{ background:var(--flame); color:var(--paper); }
+  ::-webkit-scrollbar{ display:none; }
+  * { scrollbar-width:none; }
+
+  #app{
+    position:relative;
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(255,90,31,0.16), transparent 55%),
+      var(--ink);
+    box-shadow: 0 0 80px rgba(0,0,0,0.6);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  h1,h2,h3,.display{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    line-height:1.02;
+  }
+  .label{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    letter-spacing:0.3px;
+  }
+
+  /* ---------- SPLASH ---------- */
+  #splash{
+    position:fixed; inset:0; z-index:200;
+    max-width:460px; margin:0 auto;
+    background:
+      radial-gradient(90% 60% at 50% 0%, rgba(255,138,61,0.35), transparent 60%),
+      linear-gradient(180deg, #1c170f 0%, #100d09 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:32px;
+    transition: opacity .6s ease, visibility .6s ease;
+  }
+  #splash.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .splash-badge{
+    width:132px;height:132px;border-radius:50%;
+    background: conic-gradient(from 200deg, var(--flame), var(--mustard), var(--olive), var(--flame));
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:22px;
+    box-shadow: 0 0 0 6px rgba(250,243,230,0.06), 0 20px 40px rgba(255,90,31,0.25);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  .splash-badge span{
+    width:112px;height:112px;border-radius:50%;
+    background:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:52px;
+  }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+  #splash h1{ font-size:44px; color:var(--paper); margin:0; }
+  #splash .tag{ color:var(--mustard); font-family:'Poppins'; font-weight:700; margin-top:6px; font-size:14px; letter-spacing:1.5px; text-transform:uppercase;}
+  #splash p{ color:var(--paper-dim); font-size:14.5px; line-height:1.55; margin:18px 0 26px; max-width:300px;}
+  .splash-bar{ width:160px; height:4px; border-radius:4px; background:rgba(250,243,230,0.15); overflow:hidden; }
+  .splash-bar i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--flame),var(--mustard)); animation: fill 2.1s ease forwards; }
+  @keyframes fill{ to{ width:100%; } }
+  .splash-skip{ margin-top:22px; font-size:12px; color:var(--paper-dim); font-family:'Poppins'; letter-spacing:0.5px; }
+
+  /* ---------- TOP BAR ---------- */
+  header.topbar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; gap:10px;
+    padding:18px 20px 14px;
+    background:linear-gradient(180deg, var(--ink) 70%, rgba(23,20,15,0));
+  }
+  .topbar .screen-title{ margin-left:auto; margin-right:6px; }
+  .brandmark{ display:flex; align-items:center; gap:10px; }
+  .brandmark .dot{
+    width:38px;height:38px;border-radius:50%;
+    background:conic-gradient(from 200deg, var(--flame), var(--mustard), var(--olive), var(--flame));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brandmark .dot span{ width:31px;height:31px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .brandmark .word{ font-family:'Anton'; font-size:19px; letter-spacing:0.5px; }
+  .topbar .screen-title{ font-family:'Poppins'; font-weight:700; font-size:12px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:1.4px;}
+
+  main{ flex:1; padding-bottom:110px; }
+  .screen{ display:none; animation: rise .45s ease; }
+  .screen.active{ display:block; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    margin:4px 20px 22px;
+    border-radius: var(--radius-lg);
+    padding:26px 22px 24px;
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(255,197,61,0.35), transparent 55%),
+      linear-gradient(155deg, var(--flame) 0%, #d8410f 65%, #a52d08 100%);
+    box-shadow: var(--shadow);
+  }
+  .hero .stamp{ position:absolute; top:16px; right:16px; }
+  .hero .kicker{ font-family:'Poppins'; font-weight:700; font-size:12px; letter-spacing:1.6px; text-transform:uppercase; color:#3a1503; opacity:.75; }
+  .hero h1{ font-size:34px; color:var(--ink); margin:6px 0 8px; text-shadow:0 2px 0 rgba(255,255,255,0.15); }
+  .hero p{ font-family:'Inter'; font-size:14px; color:#3a1503; opacity:.85; line-height:1.5; max-width:88%; margin:0 0 18px; }
+  .hero-icons{ display:flex; gap:10px; flex-wrap:wrap; }
+  .hero-icons span{
+    background:rgba(23,20,15,0.18); color:var(--ink);
+    font-family:'Poppins'; font-weight:600; font-size:12.5px;
+    padding:7px 12px; border-radius:100px; display:flex; align-items:center; gap:6px;
+    border:1px solid rgba(23,20,15,0.15);
+  }
+
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin:26px 20px 12px; }
+  .section-head h2{ font-size:22px; color:var(--paper); }
+  .section-head .see-all{ font-family:'Poppins'; font-weight:600; font-size:12.5px; color:var(--mustard); }
+  .section-sub{ margin:-6px 20px 14px; color:var(--paper-dim); font-size:13px; }
+
+  /* ---------- CATEGORY CHIP ROW (Inicio) ---------- */
+  .chip-row{ display:flex; gap:12px; overflow-x:auto; padding:2px 20px 6px; }
+  .chip{
+    flex:0 0 auto; width:96px;
+    background:var(--card); border-radius:var(--radius-md);
+    padding:16px 10px 12px; text-align:center;
+    border:1px solid var(--line);
+    transition: transform .15s ease;
+  }
+  .chip:active{ transform:scale(0.95); }
+  .chip .ico{
+    width:52px;height:52px;border-radius:16px;margin:0 auto 10px;
+    display:flex;align-items:center;justify-content:center;font-size:26px;
+  }
+  .chip .label{ font-size:11.5px; color:var(--paper); text-transform:uppercase; letter-spacing:.3px; }
+
+  /* ---------- PRODUCT CARD GRID ---------- */
+  .card-row{ display:flex; gap:14px; overflow-x:auto; padding:2px 20px 10px; }
+  .stack{ display:flex; flex-direction:column; gap:16px; padding:2px 20px 10px; }
+
+  .pcard{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow: var(--shadow);
+    flex:0 0 auto;
+  }
+  .pcard.wide{ width:100%; display:flex; }
+  .pcard.tall{ width:186px; }
+
+  .pcard .art{
+    display:flex; align-items:center; justify-content:center;
+    font-size:44px;
+    position:relative;
+  }
+  .pcard.tall .art{ height:130px; }
+  .pcard.wide .art{ width:118px; flex:0 0 118px; font-size:40px; }
+
+  .pcard .body{ padding:14px 15px 16px; flex:1; }
+  .pcard.tall .body{ padding:13px 13px 15px; }
+  .pcard h3{ font-family:'Poppins'; font-weight:700; text-transform:none; letter-spacing:0; font-size:15px; color:var(--paper); margin:0 0 4px; }
+  .pcard .desc{ font-size:12.3px; color:var(--paper-dim); line-height:1.45; margin:0 0 10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .pcard .meta{ display:flex; align-items:center; justify-content:space-between; }
+  .price{ font-family:'Anton'; font-size:18px; color:var(--mustard); letter-spacing:.3px; }
+  .addbtn{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--flame); color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px; font-weight:800; border:none; cursor:pointer;
+  }
+  .presentation{ display:inline-block; margin-top:8px; font-family:'Poppins'; font-size:10.5px; font-weight:600; color:var(--olive); background:rgba(124,140,70,0.16); padding:3px 9px; border-radius:100px; letter-spacing:.3px; }
+
+  .stamp{
+    width:60px; height:60px; border-radius:50%;
+    border:2px dashed var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-12deg);
+    background:rgba(23,20,15,0.06);
+  }
+  .stamp b{ font-family:'Poppins'; font-weight:800; font-size:8px; text-align:center; line-height:1.2; letter-spacing:.4px; text-transform:uppercase; color:var(--ink); }
+  .pcard .stamp{ position:absolute; top:8px; right:8px; width:50px; height:50px; border-color: var(--mustard); background:rgba(255,197,61,0.1); }
+  .pcard .stamp b{ color:var(--mustard); font-size:7px; }
+
+  /* ---------- TABS PILLS (Menú) ---------- */
+  .pill-row{ display:flex; gap:10px; overflow-x:auto; padding:4px 20px 18px; position:sticky; top:66px; z-index:15; background:var(--ink); }
+  .pill{
+    flex:0 0 auto; font-family:'Poppins'; font-weight:600; font-size:13px;
+    padding:10px 18px; border-radius:100px; border:1px solid var(--line);
+    background:var(--card); color:var(--paper-dim); cursor:pointer; white-space:nowrap;
+    display:flex; align-items:center; gap:7px;
+    transition:.2s ease;
+  }
+  .pill.active{ background:var(--flame); color:var(--ink); border-color:var(--flame); }
+
+  .subhead{ margin:6px 20px 12px; }
+  .subhead h3{ font-size:18px; color:var(--paper); }
+  .subhead p{ font-size:12.5px; color:var(--paper-dim); margin:2px 0 0; }
+
+  /* ---------- PROMO ---------- */
+  .promo{
+    margin:16px 20px; border-radius:var(--radius-lg);
+    padding:20px; position:relative; overflow:hidden;
+    box-shadow:var(--shadow); border:1px solid var(--line);
+  }
+  .promo.p1{ background:linear-gradient(140deg,#3a2f1c,#241f18); }
+  .promo.p2{ background:linear-gradient(140deg,#33210f,#241f18); }
+  .promo .tagrow{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .promo .combo-icon{ font-size:30px; }
+  .promo .save{ font-family:'Poppins'; font-weight:700; font-size:11px; background:var(--olive); color:#111; padding:5px 10px; border-radius:100px; }
+  .promo h3{ font-size:21px; color:var(--paper); margin:0 0 6px; }
+  .promo .items{ font-size:13px; color:var(--paper-dim); margin:0 0 14px; line-height:1.5; }
+  .promo .foot{ display:flex; align-items:center; justify-content:space-between; }
+
+  /* ---------- REVIEWS ---------- */
+  .stars{ color:var(--mustard); font-size:14px; letter-spacing:2px; }
+  .rcard{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:18px; margin:14px 20px;
+  }
+  .rcard p{ font-size:14px; color:var(--paper); line-height:1.55; margin:10px 0 12px; font-style:italic; }
+  .rcard .who{ display:flex; align-items:center; gap:10px; }
+  .rcard .avatar{ width:34px;height:34px;border-radius:50%; background:linear-gradient(140deg,var(--flame),var(--mustard)); display:flex;align-items:center;justify-content:center; font-family:'Anton'; font-size:14px; color:#241f18; }
+  .rcard .name{ font-family:'Poppins'; font-weight:600; font-size:13px; color:var(--paper); }
+  .rcard .visit{ font-size:11px; color:var(--paper-dim); }
+
+  .rating-banner{
+    margin:6px 20px 8px; padding:20px; border-radius:var(--radius-lg);
+    background:linear-gradient(140deg, var(--olive-dark), #1e2412);
+    display:flex; align-items:center; gap:16px; box-shadow:var(--shadow);
+  }
+  .rating-banner .big{ font-family:'Anton'; font-size:40px; color:var(--mustard); }
+  .rating-banner .stars{ font-size:16px; }
+  .rating-banner .sub{ font-size:12px; color:var(--paper-dim); margin-top:2px; }
+
+  /* ---------- LOCATION ---------- */
+  .loc-map{
+    margin:4px 20px 18px; height:150px; border-radius:var(--radius-lg);
+    background:
+      repeating-linear-gradient(0deg, rgba(250,243,230,0.05) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, rgba(250,243,230,0.05) 0 1px, transparent 1px 22px),
+      linear-gradient(140deg,#2c261c,#1a160f);
+    display:flex; align-items:center; justify-content:center; position:relative; border:1px solid var(--line);
+  }
+  .loc-map .pin{ font-size:36px; filter:drop-shadow(0 6px 8px rgba(0,0,0,0.5)); }
+  .info-list{ margin:0 20px; display:flex; flex-direction:column; gap:12px; }
+  .info-row{
+    display:flex; gap:14px; align-items:flex-start;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md); padding:14px 16px;
+  }
+  .info-row .ic{ font-size:20px; margin-top:1px; }
+  .info-row .t{ font-family:'Poppins'; font-weight:600; font-size:12px; color:var(--paper-dim); text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px;}
+  .info-row .v{ font-size:14px; color:var(--paper); line-height:1.4; }
+
+  .cta-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 20px 6px; }
+  .cta{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    padding:16px 10px; border-radius:var(--radius-md); border:none; cursor:pointer;
+    font-family:'Poppins'; font-weight:700; font-size:12.5px; letter-spacing:.3px;
+  }
+  .cta.primary{ background:var(--flame); color:var(--ink); grid-column:1/-1; padding:16px; font-size:14px; }
+  .cta.olive{ background:rgba(124,140,70,0.18); color:var(--olive); border:1px solid rgba(124,140,70,0.35); }
+  .cta.ghost{ background:var(--card); color:var(--paper); border:1px solid var(--line); }
+
+  .social-row{ display:flex; gap:12px; margin:18px 20px 8px; }
+  .social-row a{
+    flex:1; text-align:center; padding:13px; border-radius:var(--radius-sm);
+    background:var(--card); border:1px solid var(--line); font-size:19px; text-decoration:none;
+  }
+
+  .note{ margin:20px 20px 0; font-size:11px; color:var(--paper-dim); text-align:center; line-height:1.5; }
+
+  /* ---------- BOTTOM NAV ---------- */
+  nav.tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:460px; z-index:100;
+    background:rgba(28,23,16,0.92); backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    display:flex; padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+  }
+  .tabbtn{
+    flex:1; background:none; border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding:6px 2px; color:var(--paper-dim); font-family:'Poppins'; font-weight:600; font-size:10px;
+    letter-spacing:.2px; text-transform:uppercase;
+  }
+  .tabbtn .ic{ font-size:20px; transition:transform .2s ease; }
+  .tabbtn.active{ color:var(--mustard); }
+  .tabbtn.active .ic{ transform:translateY(-3px) scale(1.12); }
+  .tabbtn .dotline{ width:4px; height:4px; border-radius:50%; background:var(--flame); opacity:0; margin-top:-2px; }
+  .tabbtn.active .dotline{ opacity:1; }
+
+  @media (min-width:461px){
+    body{ padding:24px 0; }
+    #app{ min-height:auto; border-radius:36px; }
+    #splash{ border-radius:36px; }
+  }
+
+  /* ---------- CART BUTTON (header) ---------- */
+  .cartbtn{
+    position:relative; width:40px; height:40px; border-radius:50%;
+    background:var(--card); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    cursor:pointer;
+  }
+  .cartbtn .badge{
+    position:absolute; top:-5px; right:-5px; min-width:18px; height:18px; padding:0 4px;
+    border-radius:100px; background:var(--flame); color:var(--ink);
+    font-family:'Poppins'; font-weight:800; font-size:10px;
+    display:flex; align-items:center; justify-content:center;
+    border:2px solid var(--ink); transform:scale(0); transition:transform .2s ease;
+  }
+  .cartbtn .badge.show{ transform:scale(1); }
+
+  /* ---------- FLOATING CART BAR ---------- */
+  .cartbar{
+    position:fixed; left:50%; bottom:86px; transform:translateX(-50%) translateY(120%);
+    width:calc(100% - 40px); max-width:420px; z-index:90;
+    background:linear-gradient(140deg, var(--flame), #d8410f);
+    border-radius:100px; padding:6px 8px 6px 18px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    box-shadow:0 16px 30px rgba(255,90,31,0.35);
+    transition: transform .35s cubic-bezier(.2,.9,.3,1.2);
+    cursor:pointer;
+  }
+  .cartbar.show{ transform:translateX(-50%) translateY(0); }
+  .cartbar .info{ display:flex; flex-direction:column; }
+  .cartbar .count{ font-family:'Poppins'; font-weight:700; font-size:11px; color:#3a1503; opacity:.8; text-transform:uppercase; letter-spacing:.3px; }
+  .cartbar .amount{ font-family:'Anton'; font-size:18px; color:var(--ink); }
+  .cartbar .go{
+    background:var(--ink); color:var(--mustard); border:none; border-radius:100px;
+    padding:12px 18px; font-family:'Poppins'; font-weight:700; font-size:13px;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* ---------- CART OVERLAY / SHEET ---------- */
+  .overlay{
+    position:fixed; inset:0; z-index:150;
+    max-width:460px; margin:0 auto;
+    background:rgba(8,6,4,0.6);
+    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s ease;
+  }
+  .overlay.show{ opacity:1; visibility:visible; }
+  .sheet{
+    position:absolute; left:0; right:0; bottom:0; max-height:82vh;
+    background:var(--ink-soft); border-radius:28px 28px 0 0;
+    border-top:1px solid var(--line);
+    display:flex; flex-direction:column;
+    transform:translateY(100%); transition:transform .35s cubic-bezier(.2,.9,.3,1.1);
+    box-shadow:0 -20px 50px rgba(0,0,0,0.5);
+  }
+  .overlay.show .sheet{ transform:translateY(0); }
+  .sheet .grabber{ width:40px; height:4px; border-radius:4px; background:var(--line); margin:12px auto 4px; }
+  .sheet-head{ display:flex; align-items:center; justify-content:space-between; padding:10px 20px 4px; }
+  .sheet-head h2{ font-size:20px; color:var(--paper); }
+  .sheet-head .pill-tag{ font-family:'Poppins'; font-weight:700; font-size:10.5px; color:var(--olive); background:rgba(124,140,70,0.16); padding:5px 10px; border-radius:100px; letter-spacing:.3px; text-transform:uppercase; }
+  .sheet-body{ overflow-y:auto; padding:10px 20px 4px; flex:1; }
+  .empty-cart{ text-align:center; padding:40px 20px 30px; color:var(--paper-dim); }
+  .empty-cart .ic{ font-size:44px; display:block; margin-bottom:14px; }
+  .empty-cart p{ font-size:13.5px; line-height:1.5; margin:0; }
+
+  .citem{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
+  .citem .ic{
+    width:46px; height:46px; border-radius:14px; flex:0 0 46px;
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+    background:var(--card);
+  }
+  .citem .info{ flex:1; min-width:0; }
+  .citem .info .n{ font-family:'Poppins'; font-weight:600; font-size:13.5px; color:var(--paper); margin-bottom:2px; }
+  .citem .info .p{ font-size:12px; color:var(--paper-dim); }
+  .stepper{ display:flex; align-items:center; gap:10px; }
+  .stepper button{
+    width:26px; height:26px; border-radius:50%; border:1px solid var(--line);
+    background:var(--card); color:var(--paper); font-size:15px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; line-height:1;
+  }
+  .stepper button.plus{ background:var(--flame); color:var(--ink); border-color:var(--flame); }
+  .stepper .qty{ font-family:'Poppins'; font-weight:700; font-size:13px; min-width:14px; text-align:center; }
+
+  .sheet-foot{ padding:14px 20px calc(18px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+  .sum-row{ display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--paper-dim); margin-bottom:6px; }
+  .sum-row.total{ font-family:'Anton'; font-size:20px; color:var(--paper); margin:8px 0 14px; }
+  .sum-row.total .amt{ color:var(--mustard); }
+  .note-takeaway{ display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--paper-dim); background:rgba(255,197,61,0.08); border:1px solid rgba(255,197,61,0.2); padding:9px 12px; border-radius:12px; margin-bottom:14px; }
+  .checkout-btn{
+    width:100%; background:var(--flame); color:var(--ink); border:none; border-radius:16px;
+    padding:16px; font-family:'Poppins'; font-weight:700; font-size:14.5px;
+    display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= SPLASH ================= -->
+<div id="splash">
+  <div class="splash-badge"><span>🍔</span></div>
+  <h1>Los Olivos</h1>
+  <div class="tag">Antojo urbano</div>
+  <p>Hamburguesas, hot dogs, snacks, postres y bebidas para acompañar cada momento.</p>
+  <div class="splash-bar"><i></i></div>
+  <div class="splash-skip">Toca para continuar</div>
+</div>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brandmark">
+      <div class="dot"><span>🍔</span></div>
+      <div class="word">LOS OLIVOS</div>
+    </div>
+    <div class="screen-title" id="screenTitle">Inicio</div>
+    <button class="cartbtn" id="cartBtn" onclick="openCart()">🛍️<span class="badge" id="cartBadge">0</span></button>
+  </header>
+
+  <main>
+
+    <!-- ================= INICIO ================= -->
+    <section class="screen active" id="screen-inicio">
+      <div class="hero">
+        <div class="stamp"><b>100%<br>ANTOJO</b></div>
+        <div class="kicker">Directo a tu mesa</div>
+        <h1>Aquí comienza<br>el antojo</h1>
+        <p>Hamburguesas jugosas, hot dogs llenos de sabor y todo lo que se te antoje, en un solo lugar.</p>
+        <div class="hero-icons">
+          <span>🍔 Hamburguesas</span>
+          <span>🌭 Hot Dogs</span>
+          <span>🍟 Snacks</span>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>Descubre nuestros favoritos</h2></div>
+      <div class="chip-row" id="homeChips"></div>
+
+      <div class="section-head"><h2>🔥 Los favoritos</h2><span class="see-all" onclick="goTab('menu')">Ver menú</span></div>
+      <div class="section-sub">Lo más pedido de la casa</div>
+      <div class="card-row" id="homeFavorites"></div>
+
+      <div class="section-head"><h2>Combos del momento</h2><span class="see-all" onclick="goTab('promos')">Ver todo</span></div>
+      <div id="homePromoPreview"></div>
+
+      <p class="note">Menú digital de LOS OLIVOS · Optimizado para escanear y pedir 🍔</p>
+    </section>
+
+    <!-- ================= MENÚ ================= -->
+    <section class="screen" id="screen-menu">
+      <div class="section-head" style="margin-top:14px;"><h2>Nuestro menú</h2></div>
+      <div class="pill-row" id="pillRow"></div>
+      <div class="subhead">
+        <h3 id="catTitle">Hamburguesas</h3>
+        <p id="catSub">Carne preparada al momento, siempre bien servida.</p>
+      </div>
+      <div class="stack" id="menuList"></div>
+    </section>
+
+    <!-- ================= PROMOCIONES ================= -->
+    <section class="screen" id="screen-promos">
+      <div class="section-head" style="margin-top:14px;"><h2>🔥 Promociones</h2></div>
+      <div class="section-sub">Combos pensados para tu antojo, con mejor precio</div>
+      <div id="promoList"></div>
+      <p class="note">Promociones vigentes en sucursal. Precios y disponibilidad pueden variar.</p>
+    </section>
+
+    <!-- ================= RESEÑAS ================= -->
+    <section class="screen" id="screen-resenas">
+      <div class="section-head" style="margin-top:14px;"><h2>⭐ Reseñas</h2></div>
+      <div class="rating-banner">
+        <div class="big">4.9</div>
+        <div>
+          <div class="stars">★★★★★</div>
+          <div class="sub">Basado en clientes de LOS OLIVOS</div>
+        </div>
+      </div>
+      <div id="reviewList"></div>
+    </section>
+
+    <!-- ================= UBICACIÓN ================= -->
+    <section class="screen" id="screen-ubicacion">
+      <div class="section-head" style="margin-top:14px;"><h2>📍 Ubicación</h2></div>
+      <div class="loc-map"><div class="pin">📍</div></div>
+
+      <div class="info-list">
+        <div class="info-row"><div class="ic">📍</div><div><div class="t">Dirección</div><div class="v">Av. Ejemplo 123, Col. Centro</div></div></div>
+        <div class="info-row"><div class="ic">🕐</div><div><div class="t">Horarios</div><div class="v">Lunes a domingo · 1:00 pm – 11:00 pm</div></div></div>
+        <div class="info-row"><div class="ic">📞</div><div><div class="t">Teléfono</div><div class="v">55 0000 0000</div></div></div>
+      </div>
+
+      <div class="cta-grid">
+        <a class="cta primary" href="https://wa.me/5210000000000" target="_blank" rel="noopener">💬 Pedir por WhatsApp</a>
+        <a class="cta olive" href="tel:5500000000">📞 Llamar</a>
+        <a class="cta ghost" href="https://www.google.com/maps" target="_blank" rel="noopener">🗺️ Cómo llegar</a>
+      </div>
+
+      <div class="section-head"><h2 style="font-size:16px;">Síguenos</h2></div>
+      <div class="social-row">
+        <a href="#" target="_blank" rel="noopener" title="Facebook">📘</a>
+        <a href="#" target="_blank" rel="noopener" title="Instagram">📸</a>
+        <a href="#" target="_blank" rel="noopener" title="TikTok">🎵</a>
+      </div>
+
+      <p class="note">Edita la dirección, teléfono y enlaces con los datos reales de tu sucursal.</p>
+    </section>
+
+  </main>
+
+  <div class="cartbar" id="cartBar" onclick="openCart()">
+    <div class="info">
+      <span class="count" id="cartBarCount">0 productos</span>
+      <span class="amount" id="cartBarAmount">$0</span>
+    </div>
+    <button class="go">Ver pedido →</button>
+  </div>
+
+  <div class="overlay" id="cartOverlay">
+    <div class="sheet">
+      <div class="grabber"></div>
+      <div class="sheet-head">
+        <h2>Tu pedido</h2>
+        <span class="pill-tag">🥡 Para llevar</span>
+      </div>
+      <div class="sheet-body" id="cartBody"></div>
+      <div class="sheet-foot" id="cartFoot"></div>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tabbtn active" data-tab="inicio"><span class="ic">🏠</span>Inicio<span class="dotline"></span></button>
+    <button class="tabbtn" data-tab="menu"><span class="ic">🍔</span>Menú<span class="dotline"></span></button>
+    <button class="tabbtn" data-tab="promos"><span class="ic">🔥</span>Promos<span class="dotline"></span></button>
+    <button class="tabbtn" data-tab="resenas"><span class="ic">⭐</span>Reseñas<span class="dotline"></span></button>
+    <button class="tabbtn" data-tab="ubicacion"><span class="ic">📍</span>Ubicación<span class="dotline"></span></button>
+  </nav>
+
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const CATEGORIES = [
+  { key:'hamburguesas', label:'Hamburguesas', icon:'🍔', sub:'Carne preparada al momento, siempre bien servida.', color:'linear-gradient(140deg,#ff8a3d,#ff5a1f)' },
+  { key:'hotdogs', label:'Hot Dogs', icon:'🌭', sub:'Salchicha jugosa con los ingredientes de siempre.', color:'linear-gradient(140deg,#ffd35e,#ffc53d)' },
+  { key:'snacks', label:'Snacks', icon:'🍟', sub:'Para compartir o acompañar tu antojo.', color:'linear-gradient(140deg,#e0c46b,#c79a3c)' },
+  { key:'postres', label:'Postres', icon:'🍰', sub:'Para cerrar con algo dulce.', color:'linear-gradient(140deg,#f2a6c1,#e2688f)' },
+  { key:'bebidas', label:'Bebidas', icon:'🥤', sub:'Frías y calientes, para acompañar todo.', color:'linear-gradient(140deg,#8fd0d8,#4fa3ad)' },
+];
+
+const MENU = {
+  hamburguesas: [
+    { name:'Hamburguesa Clásica', desc:'Carne preparada al momento, con vegetales frescos, queso y aderezo especial.', price:89, tag:'Sencilla · Doble', icon:'🍔' },
+    { name:'Hamburguesa Especial', desc:'Carne, queso, tocino, vegetales y la salsa especial de la casa.', price:109, tag:'Top ventas', icon:'🍔', top:true },
+    { name:'Hamburguesa BBQ', desc:'Carne, queso, tocino y deliciosa salsa BBQ.', price:105, tag:'Sencilla · Doble', icon:'🍔' },
+    { name:'Hamburguesa Doble', desc:'Doble carne, doble queso y todos los ingredientes para un antojo más grande.', price:129, tag:'Extra grande', icon:'🍔' },
+  ],
+  hotdogs: [
+    { name:'Hot Dog Clásico', desc:'Salchicha acompañada de los ingredientes tradicionales.', price:59, tag:'Individual', icon:'🌭' },
+    { name:'Hot Dog Especial', desc:'Salchicha, queso, tocino, vegetales y aderezos especiales.', price:75, tag:'Top ventas', icon:'🌭', top:true },
+    { name:'Hot Dog Supremo', desc:'Combinación completa de ingredientes para los amantes de los grandes antojos.', price:89, tag:'Extra grande', icon:'🌭' },
+  ],
+  snacks: [
+    { name:'Papas a la Francesa', desc:'Clásicas, doradas y crujientes por fuera.', price:49, icon:'🍟' },
+    { name:'Papas Sazonadas', desc:'Con nuestra mezcla de especias de la casa.', price:52, icon:'🍟' },
+    { name:'Papas con Queso', desc:'Bañadas en queso derretido.', price:65, icon:'🧀' },
+    { name:'Papas con Tocino', desc:'Con trozos de tocino crujiente.', price:69, icon:'🥓' },
+    { name:'Papas Supremas', desc:'Queso derretido y tocino crujiente, todo junto.', price:79, tag:'Top ventas', icon:'🧀', top:true },
+    { name:'Dedos de Queso', desc:'Crujientes por fuera, derretidos por dentro.', price:75, tag:'Top ventas', icon:'🧀', top:true },
+    { name:'Nuggets', desc:'Piezas doradas y crujientes, para compartir.', price:65, icon:'🍗' },
+    { name:'Boneless', desc:'Trozos de pollo empanizado bañados en tu salsa favorita.', price:89, tag:'Top ventas', icon:'🍗', top:true },
+    { name:'Aros de Cebolla', desc:'Cebolla capeada y frita hasta quedar dorada.', price:59, icon:'🧅' },
+  ],
+  postres: [
+    { name:'Pastel del Día', desc:'Rebanada de nuestro pastel casero.', price:55, icon:'🍰' },
+    { name:'Cheesecake', desc:'Cremoso, con base de galleta y toque de fruta.', price:65, icon:'🍰' },
+    { name:'Brownie', desc:'Chocolate intenso, textura suave por dentro.', price:55, icon:'🍫' },
+    { name:'Waffle', desc:'Recién hecho, con topping a elegir.', price:75, icon:'🧇' },
+    { name:'Crepa', desc:'Dulce, rellena a tu gusto.', price:70, icon:'🥞' },
+    { name:'Helado', desc:'Bola de helado, sabor del día.', price:45, icon:'🍦' },
+    { name:'Fresas con Crema', desc:'Fresas frescas con crema batida.', price:65, icon:'🍓' },
+    { name:'Galletas', desc:'Recién horneadas, crujientes por fuera.', price:40, icon:'🍪' },
+    { name:'Postre Especial de la Casa', desc:'La creación dulce favorita de LOS OLIVOS.', price:85, icon:'✨' },
+  ],
+  bebidas: [
+    { name:'Refresco', desc:'Sabor a elegir, bien frío.', price:35, tag:'Fría', icon:'🥤' },
+    { name:'Agua Fresca', desc:'Preparada del día.', price:30, tag:'Fría', icon:'🥤' },
+    { name:'Limonada', desc:'Natural, refrescante.', price:38, tag:'Fría', icon:'🍋' },
+    { name:'Malteada', desc:'Cremosa, sabor a elegir.', price:65, tag:'Fría', icon:'🥤' },
+    { name:'Frappé', desc:'Bien frío, con un toque especial.', price:70, tag:'Fría · Top ventas', icon:'🥤', top:true },
+    { name:'Soda Italiana', desc:'Refrescante y burbujeante, con jarabe a elegir.', price:55, tag:'Fría', icon:'🥤' },
+    { name:'Café', desc:'Recién preparado.', price:35, tag:'Caliente', icon:'☕' },
+    { name:'Cappuccino', desc:'Espuma cremosa, sabor equilibrado.', price:45, tag:'Caliente', icon:'☕' },
+    { name:'Chocolate Caliente', desc:'Cremoso y reconfortante.', price:45, tag:'Caliente', icon:'☕' },
+    { name:'Té', desc:'Variedad a elegir.', price:30, tag:'Caliente', icon:'🍵' },
+  ],
+};
+
+const PROMOS = [
+  { name:'Combo Hamburguesa', items:'Hamburguesa + papas + bebida', price:139, icon:'🍔', cls:'p1' },
+  { name:'Combo Hot Dog', items:'Hot Dog + papas + bebida', price:99, icon:'🌭', cls:'p2' },
+  { name:'Combo Snacks', items:'Boneless + papas + bebida', price:145, icon:'🍗', cls:'p1' },
+  { name:'Combo Dulce', items:'Bebida + postre a elegir', price:99, icon:'🍰', cls:'p2' },
+];
+
+const REVIEWS = [
+  { name:'Karla M.', visit:'Cliente frecuente', text:'Las hamburguesas están muy buenas y las papas tienen excelente sabor.' },
+  { name:'Diego R.', visit:'Pedido a domicilio', text:'Muy buenos snacks y los postres están deliciosos.' },
+  { name:'Fer & amigos', visit:'Visita en sucursal', text:'Excelente lugar para ir con amigos y disfrutar algo rico.' },
+];
+
+/* ---------------- HELPERS ---------------- */
+const catByKey = k => CATEGORIES.find(c=>c.key===k);
+
+function artHTML(item, cat){
+  const bg = cat ? cat.color : 'linear-gradient(140deg,#ff8a3d,#ff5a1f)';
+  const stamp = item.top ? `<div class="stamp"><b>Más<br>pedido</b></div>` : '';
+  return `<div class="art" style="background:${bg}">${item.icon}${stamp}</div>`;
+}
+
+function tallCard(item, cat){
+  return `<div class="pcard tall">
+    ${artHTML(item, cat)}
+    <div class="body">
+      <h3>${item.name}</h3>
+      <div class="desc">${item.desc}</div>
+      <div class="meta">
+        <span class="price">$${item.price}</span>
+        <button class="addbtn" data-name="${item.name}" data-price="${item.price}" data-icon="${item.icon}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wideCard(item, cat){
+  return `<div class="pcard wide">
+    ${artHTML(item, cat)}
+    <div class="body">
+      <h3>${item.name}</h3>
+      <div class="desc">${item.desc}</div>
+      ${item.tag ? `<span class="presentation">${item.tag}</span>` : ''}
+      <div class="meta" style="margin-top:10px;">
+        <span class="price">$${item.price}</span>
+        <button class="addbtn" data-name="${item.name}" data-price="${item.price}" data-icon="${item.icon}">+</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- RENDER: HOME ---------------- */
+function renderHome(){
+  document.getElementById('homeChips').innerHTML = CATEGORIES.map(c => `
+    <div class="chip" onclick="goTab('menu','${c.key}')">
+      <div class="ico" style="background:${c.color}">${c.icon}</div>
+      <div class="label">${c.label}</div>
+    </div>
+  `).join('');
+
+  const favorites = [];
+  Object.keys(MENU).forEach(k=>{
+    MENU[k].filter(i=>i.top).forEach(i=> favorites.push({item:i, cat:catByKey(k)}));
+  });
+  document.getElementById('homeFavorites').innerHTML = favorites.map(f => tallCard(f.item, f.cat)).join('');
+
+  document.getElementById('homePromoPreview').innerHTML = `<div class="stack" style="padding-top:0;">${
+    PROMOS.slice(0,1).map(promoCard).join('')
+  }</div>`;
+}
+
+/* ---------------- RENDER: MENU ---------------- */
+let activeCat = 'hamburguesas';
+
+function renderPills(){
+  document.getElementById('pillRow').innerHTML = CATEGORIES.map(c => `
+    <button class="pill ${c.key===activeCat?'active':''}" onclick="setCategory('${c.key}')">${c.icon} ${c.label}</button>
+  `).join('');
+}
+
+function setCategory(key){
+  activeCat = key;
+  const cat = catByKey(key);
+  document.getElementById('catTitle').textContent = cat.label;
+  document.getElementById('catSub').textContent = cat.sub;
+  document.getElementById('menuList').innerHTML = MENU[key].map(i => wideCard(i, cat)).join('');
+  renderPills();
+}
+
+/* ---------------- RENDER: PROMOS ---------------- */
+function promoCard(p){
+  return `<div class="promo ${p.cls}">
+    <div class="tagrow">
+      <div class="combo-icon">${p.icon}</div>
+      <span class="save">Precio combo</span>
+    </div>
+    <h3>${p.name}</h3>
+    <p class="items">${p.items}</p>
+    <div class="foot">
+      <span class="price" style="font-size:22px;">$${p.price}</span>
+      <button class="addbtn" style="width:36px;height:36px;font-size:20px;" data-name="${p.name}" data-price="${p.price}" data-icon="${p.icon}">+</button>
+    </div>
+  </div>`;
+}
+function renderPromos(){
+  document.getElementById('promoList').innerHTML = PROMOS.map(promoCard).join('');
+}
+
+/* ---------------- RENDER: REVIEWS ---------------- */
+function renderReviews(){
+  document.getElementById('reviewList').innerHTML = REVIEWS.map(r => `
+    <div class="rcard">
+      <div class="stars">★★★★★</div>
+      <p>"${r.text}"</p>
+      <div class="who">
+        <div class="avatar">${r.name.charAt(0)}</div>
+        <div>
+          <div class="name">${r.name}</div>
+          <div class="visit">${r.visit}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ---------------- TABS ---------------- */
+const titles = { inicio:'Inicio', menu:'Menú', promos:'Promociones', resenas:'Reseñas', ubicacion:'Ubicación' };
+
+function goTab(tab, cat){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+tab).classList.add('active');
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  document.getElementById('screenTitle').textContent = titles[tab];
+  if(tab==='menu' && cat){ setCategory(cat); }
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+document.querySelectorAll('.tabbtn').forEach(btn=>{
+  btn.addEventListener('click', ()=> goTab(btn.dataset.tab));
+});
+
+/* ---------------- CARRITO (PARA LLEVAR) ---------------- */
+const WHATSAPP_NUMBER = '5210000000000'; // TODO: reemplazar con el número real de la sucursal
+let cart = {}; // { name: {name, price, icon, qty} }
+
+function addToCart(name, price, icon){
+  if(!cart[name]) cart[name] = { name, price:Number(price), icon, qty:0 };
+  cart[name].qty += 1;
+  renderCart(true);
+}
+function decFromCart(name){
+  if(!cart[name]) return;
+  cart[name].qty -= 1;
+  if(cart[name].qty <= 0) delete cart[name];
+  renderCart();
+}
+function cartItems(){ return Object.values(cart); }
+function cartCount(){ return cartItems().reduce((s,i)=>s+i.qty,0); }
+function cartTotal(){ return cartItems().reduce((s,i)=>s+i.qty*i.price,0); }
+
+function renderCart(bump){
+  const items = cartItems();
+  const count = cartCount();
+  const total = cartTotal();
+
+  // header badge
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count>0);
+
+  // floating bar
+  const bar = document.getElementById('cartBar');
+  bar.classList.toggle('show', count>0);
+  document.getElementById('cartBarCount').textContent = count + (count===1 ? ' producto' : ' productos');
+  document.getElementById('cartBarAmount').textContent = '$' + total;
+
+  // sheet body
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  if(items.length === 0){
+    body.innerHTML = `<div class="empty-cart"><span class="ic">🛍️</span><p>Aún no agregas nada.<br>Toca el "+" en cualquier producto del menú para armar tu pedido para llevar.</p></div>`;
+    foot.innerHTML = '';
+  } else {
+    body.innerHTML = items.map(i => `
+      <div class="citem">
+        <div class="ic">${i.icon || '🍽️'}</div>
+        <div class="info">
+          <div class="n">${i.name}</div>
+          <div class="p">$${i.price} c/u</div>
+        </div>
+        <div class="stepper">
+          <button onclick="decFromCart('${i.name.replace(/'/g,"\\'")}')">−</button>
+          <span class="qty">${i.qty}</span>
+          <button class="plus" onclick="addToCart('${i.name.replace(/'/g,"\\'")}', ${i.price}, '${i.icon||''}')">+</button>
+        </div>
+      </div>
+    `).join('');
+
+    foot.innerHTML = `
+      <div class="sum-row"><span>Productos (${count})</span><span>$${total}</span></div>
+      <div class="sum-row total"><span>Total</span><span class="amt">$${total}</span></div>
+      <div class="note-takeaway">🥡 Pedido para llevar · confírmalo por WhatsApp y te avisamos cuando esté listo.</div>
+      <button class="checkout-btn" onclick="sendOrderWhatsApp()">💬 Confirmar por WhatsApp</button>
+    `;
+  }
+
+  if(bump){
+    const cb = document.getElementById('cartBtn');
+    cb.style.transform = 'scale(1.12)';
+    setTimeout(()=> cb.style.transform = '', 160);
+  }
+}
+
+function openCart(){
+  document.getElementById('cartOverlay').classList.add('show');
+}
+function closeCart(){
+  document.getElementById('cartOverlay').classList.remove('show');
+}
+document.getElementById('cartOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'cartOverlay') closeCart();
+});
+
+// Delegación: cualquier .addbtn con data-name agrega al carrito
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.addbtn');
+  if(!btn || !btn.dataset.name) return;
+  addToCart(btn.dataset.name, btn.dataset.price, btn.dataset.icon);
+});
+
+function sendOrderWhatsApp(){
+  const items = cartItems();
+  if(items.length === 0) return;
+  let msg = `¡Hola LOS OLIVOS! 👋 Quiero hacer un pedido *para llevar*:\n\n`;
+  items.forEach(i=>{
+    msg += `• ${i.qty}x ${i.name} — $${i.qty*i.price}\n`;
+  });
+  msg += `\nTotal: $${cartTotal()}\n\nQuedo al pendiente, ¡gracias!`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+/* ---------------- INIT ---------------- */
+renderHome();
+setCategory('hamburguesas');
+renderPromos();
+renderReviews();
+renderCart();
+
+/* ---------------- SPLASH ---------------- */
+const splash = document.getElementById('splash');
+function dismissSplash(){ splash.classList.add('hide'); }
+setTimeout(dismissSplash, 2600);
+splash.addEventListener('click', dismissSplash);
+</script>
+</body>
+</html>
